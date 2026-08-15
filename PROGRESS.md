@@ -88,6 +88,7 @@ Backend foundation
 * Technical naming and documentation language: English
 * Canonical project guidance location: Parent workspace root
 * Application-directory guidance files: Synchronized context mirrors
+* Development workflow: Keep `main` stable and implement new tasks on task-specific branches
 
 ## Open Questions
 
@@ -138,3 +139,8 @@ They must not block the initial project foundation.
 * Fixed Maven Wrapper startup on Windows when the Maven user directory is not a filesystem link.
 * Created and documented the initial feature-based backend module packages.
 * Verified the package structure with the full backend Maven test run.
+
+### 2026-08-15
+
+* Pushed the backend persistence and modular package foundation to GitHub.
+* Adopted task-specific branches for new development work.
