@@ -33,26 +33,28 @@ Backend foundation
 * GitHub CLI authenticated for the `glaps12` account
 * Public `schedio-backend` and `schedio-frontend` GitHub repositories created
 * Initial backend and frontend commits pushed to their respective `main` branches
+* Backend persistence dependencies added for Spring Data JPA, Bean Validation, Flyway, MySQL, and Testcontainers
+* Backend datasource configured through environment variables with safe local defaults
+* Local MySQL 8.4.11 service configured with Docker Compose on host port 3307
+* Flyway enabled as the database migration mechanism
+* Hibernate schema generation restricted to validation
+* First MySQL integration test added and passed with Testcontainers
+* Maven Wrapper Windows bootstrap null-target handling fixed
+* Initial modular backend package structure created with documented feature boundaries
 
 ## In Progress
 
-* Preparing the persistence and local database foundation
+* Preparing the first database migration
 
 ## Next Tasks
 
-1. Add and verify the backend dependencies for Spring Data JPA, Bean Validation, Flyway, MySQL, and Testcontainers.
-2. Create the initial modular package structure.
-3. Configure MySQL through environment variables.
-4. Add Docker Compose for the local MySQL database.
-5. Configure Flyway.
-6. Add the first database migration.
-7. Add a standard API error response model.
-8. Add global exception handling.
-9. Configure OpenAPI and Swagger UI.
-10. Add a basic health-check endpoint.
-11. Add the first MySQL integration test using Testcontainers.
-12. Document local setup and execution commands.
-13. Run all available checks and record the results.
+1. Add the first database migration.
+2. Add a standard API error response model.
+3. Add global exception handling.
+4. Configure OpenAPI and Swagger UI.
+5. Add a basic health-check endpoint.
+6. Document local setup and execution commands.
+7. Run all available checks and record the results.
 
 ## Decisions
 
@@ -61,8 +63,12 @@ Backend foundation
 * Backend repository: `glaps12/schedio-backend`
 * Frontend repository: `glaps12/schedio-frontend`
 * Backend architecture: Modular monolith
+* Backend module roots: `auth`, `user`, `business`, `employee`, `customer`, `servicecatalog`, `availability`, `appointment`, `notification`, `reporting`, `audit`, and `shared`
+* Module subpackages will be introduced with working feature code instead of creating empty technical layers up front
 * Multi-tenancy strategy: Shared database and shared schema
 * Database: MySQL
+* Local and test MySQL version: 8.4.11
+* Local Docker MySQL host port: 3307
 * Backend language: Java 21
 * Backend build tool: Maven
 * Spring Boot version: 4.1.0
@@ -74,6 +80,8 @@ Backend foundation
 * API style: Versioned REST API
 * Authentication plan: JWT access tokens and refresh tokens
 * Database migration tool: Flyway
+* Hibernate schema strategy: Validate only
+* Database integration testing: Testcontainers 2.0.5 with ephemeral MySQL containers
 * Local infrastructure: Docker Compose
 * Timestamp storage: UTC
 * Initial local and demo timezone: Europe/Istanbul
@@ -120,3 +128,13 @@ They must not block the initial project foundation.
 * Changed version control from a monorepo to separate backend and frontend repositories.
 * Created public `schedio-backend` and `schedio-frontend` repositories on GitHub.
 * Committed and pushed each application only to its corresponding repository.
+
+### 2026-08-13
+
+* Added the backend persistence, validation, migration, MySQL, and Testcontainers dependencies.
+* Added environment-based datasource configuration and disabled Hibernate schema mutation.
+* Added and started a healthy Docker Compose MySQL service on host port 3307.
+* Added and passed the first real MySQL integration test with Flyway verification.
+* Fixed Maven Wrapper startup on Windows when the Maven user directory is not a filesystem link.
+* Created and documented the initial feature-based backend module packages.
+* Verified the package structure with the full backend Maven test run.

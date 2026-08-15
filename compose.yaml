@@ -1,0 +1,25 @@
+name: schedio-backend
+
+services:
+  mysql:
+    image: mysql:8.4.11
+    container_name: schedio-mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-schedio}
+      MYSQL_USER: ${MYSQL_USER:-schedio}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-schedio_local_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-schedio_root_local_password}
+      TZ: UTC
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - schedio_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  schedio_mysql_data:
