@@ -9,7 +9,7 @@ Foundation
 ## Current Phase
 
 ```text
-Backend foundation
+Authentication foundation
 ```
 
 ## Completed
@@ -43,19 +43,22 @@ Backend foundation
 * Initial modular backend package structure created with documented feature boundaries
 * First Flyway migration added for the `businesses` table and verified against MySQL
 * Initial `Business` JPA entity and Spring Data repository added and verified against MySQL
+* Standard API error and field-validation response models added
+* Global exception handling added for validation, malformed requests, missing resources, state conflicts, and unexpected errors
+* OpenAPI 3 and Swagger UI configured with Springdoc
+* Actuator health endpoint configured with details hidden
+* Backend local setup, execution, endpoint, and test commands documented
+* API foundation verified with automated tests and live HTTP checks
 
 ## In Progress
 
-* Preparing the standard API error response model
+* Preparing the authentication and security foundation
 
 ## Next Tasks
 
-1. Add a standard API error response model.
-2. Add global exception handling.
-3. Configure OpenAPI and Swagger UI.
-4. Add a basic health-check endpoint.
-5. Document local setup and execution commands.
-6. Run all available checks and record the results.
+1. Implement the authentication and authorization foundation.
+2. Add the first secured Business API workflows.
+3. Begin Angular core and business feature integration.
 
 ## Decisions
 
@@ -82,6 +85,9 @@ Backend foundation
 * Frontend routing: Angular Router
 * Frontend styling: SCSS
 * API style: Versioned REST API
+* API error responses: Consistent timestamp, status, error, message, path, and validation error fields
+* API documentation: Springdoc OpenAPI 3.1.0 with Swagger UI at `/swagger-ui.html`
+* Operational health endpoint: Spring Boot Actuator at `/actuator/health` with component details hidden
 * Authentication plan: JWT access tokens and refresh tokens
 * Database migration tool: Flyway
 * Hibernate schema strategy: Validate only
@@ -151,3 +157,10 @@ They must not block the initial project foundation.
 * Added Flyway V1 to create the initial `businesses` table.
 * Added MySQL integration coverage for the migration, required values, and audit timestamps.
 * Added and verified the initial `Business` entity and `BusinessRepository` persistence mapping.
+
+### 2026-08-25
+
+* Added the shared API error contract and centralized exception handling.
+* Added and verified OpenAPI documentation, Swagger UI, and the Actuator health endpoint.
+* Documented backend local setup, execution, endpoint, and test commands.
+* Completed the basic backend and API foundation and moved to the authentication foundation phase.
