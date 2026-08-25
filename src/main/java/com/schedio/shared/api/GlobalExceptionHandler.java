@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -75,6 +76,14 @@ public class GlobalExceptionHandler {
 		var message = exception.getReason() == null ? status.getReasonPhrase() : exception.getReason();
 
 		return createResponse(status, message, request, List.of());
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	ResponseEntity<ApiErrorResponse> handleAccessDenied(
+		AccessDeniedException exception,
+		HttpServletRequest request
+	) {
+		return createResponse(HttpStatus.FORBIDDEN, "Access is denied.", request, List.of());
 	}
 
 	@ExceptionHandler(Exception.class)

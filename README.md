@@ -47,6 +47,14 @@ The local datasource defaults are safe development values and can be overridden 
 
 Only the health Actuator endpoint is exposed, and health component details are hidden.
 
+## Security Foundation
+
+The backend uses a stateless Spring Security filter chain. The health check, OpenAPI document, and Swagger UI are public. All other endpoints require authentication by default.
+
+Form login, HTTP Basic authentication, server-side sessions, and the framework-generated development user are disabled. Authentication and authorization failures use the standard API error response with `401 Unauthorized` and `403 Forbidden` status codes.
+
+BCrypt is configured for password hashing, and method-level authorization is enabled. JWT access-token and refresh-token endpoints will be added with the user and authentication persistence model.
+
 ## Tests
 
 Run all backend tests on Windows:

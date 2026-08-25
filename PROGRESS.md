@@ -49,16 +49,21 @@ Authentication foundation
 * Actuator health endpoint configured with details hidden
 * Backend local setup, execution, endpoint, and test commands documented
 * API foundation verified with automated tests and live HTTP checks
+* Stateless Spring Security filter chain added with public operational and API documentation endpoints
+* Form login, HTTP Basic authentication, server-side sessions, and the generated development user disabled
+* Standard JSON `401 Unauthorized` and `403 Forbidden` responses integrated with the shared API error contract
+* BCrypt password hashing and method-level authorization enabled
+* Security behavior verified for public access, protected access, role denial, stateless requests, CSRF handling, and password hashing
 
 ## In Progress
 
-* Preparing the authentication and security foundation
+* Designing user, role, and refresh-token persistence for JWT authentication
 
 ## Next Tasks
 
-1. Implement the authentication and authorization foundation.
-2. Add the first secured Business API workflows.
-3. Begin Angular core and business feature integration.
+1. Add the tenant-aware user, role, and refresh-token database model.
+2. Implement login, JWT access-token validation, refresh-token rotation, logout, and revocation.
+3. Add the first secured Business API workflows.
 
 ## Decisions
 
@@ -89,6 +94,12 @@ Authentication foundation
 * API documentation: Springdoc OpenAPI 3.1.0 with Swagger UI at `/swagger-ui.html`
 * Operational health endpoint: Spring Boot Actuator at `/actuator/health` with component details hidden
 * Authentication plan: JWT access tokens and refresh tokens
+* Security session strategy: Stateless; Spring Security does not create or use server-side authentication sessions
+* Public backend paths: `/error`, `/actuator/health`, `/v3/api-docs/**`, `/swagger-ui.html`, and `/swagger-ui/**`
+* Authentication mechanisms: Form login, HTTP Basic authentication, and the generated development user are disabled
+* Password hashing: BCrypt through Spring Security's `PasswordEncoder`
+* Authorization: All non-public requests require authentication by default, with method-level authorization enabled
+* Authentication error responses: Shared API error contract with JSON `401` and `403` responses
 * Database migration tool: Flyway
 * Hibernate schema strategy: Validate only
 * Database integration testing: Testcontainers 2.0.5 with ephemeral MySQL containers
@@ -164,3 +175,6 @@ They must not block the initial project foundation.
 * Added and verified OpenAPI documentation, Swagger UI, and the Actuator health endpoint.
 * Documented backend local setup, execution, endpoint, and test commands.
 * Completed the basic backend and API foundation and moved to the authentication foundation phase.
+* Added the stateless Spring Security foundation with protected-by-default application routes.
+* Added standard JSON authentication and access-denied responses, BCrypt hashing, and method authorization.
+* Added focused security tests covering the initial authentication and authorization boundary.
