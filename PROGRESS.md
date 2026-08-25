@@ -41,20 +41,21 @@ Backend foundation
 * First MySQL integration test added and passed with Testcontainers
 * Maven Wrapper Windows bootstrap null-target handling fixed
 * Initial modular backend package structure created with documented feature boundaries
+* First Flyway migration added for the `businesses` table and verified against MySQL
+* Initial `Business` JPA entity and Spring Data repository added and verified against MySQL
 
 ## In Progress
 
-* Preparing the first database migration
+* Preparing the standard API error response model
 
 ## Next Tasks
 
-1. Add the first database migration.
-2. Add a standard API error response model.
-3. Add global exception handling.
-4. Configure OpenAPI and Swagger UI.
-5. Add a basic health-check endpoint.
-6. Document local setup and execution commands.
-7. Run all available checks and record the results.
+1. Add a standard API error response model.
+2. Add global exception handling.
+3. Configure OpenAPI and Swagger UI.
+4. Add a basic health-check endpoint.
+5. Document local setup and execution commands.
+6. Run all available checks and record the results.
 
 ## Decisions
 
@@ -69,6 +70,9 @@ Backend foundation
 * Database: MySQL
 * Local and test MySQL version: 8.4.11
 * Local Docker MySQL host port: 3307
+* Initial business identifiers: Database-generated `BIGINT` values
+* Business records require a name and IANA timezone; creation and update timestamps are database-managed in UTC
+* Database-managed business timestamps are mapped as read-only JPA fields
 * Backend language: Java 21
 * Backend build tool: Maven
 * Spring Boot version: 4.1.0
@@ -144,3 +148,6 @@ They must not block the initial project foundation.
 
 * Pushed the backend persistence and modular package foundation to GitHub.
 * Adopted task-specific branches for new development work.
+* Added Flyway V1 to create the initial `businesses` table.
+* Added MySQL integration coverage for the migration, required values, and audit timestamps.
+* Added and verified the initial `Business` entity and `BusinessRepository` persistence mapping.
