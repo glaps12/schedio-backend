@@ -9,7 +9,7 @@ Foundation
 ## Current Phase
 
 ```text
-Authentication foundation
+Backend authentication complete; frontend authentication next
 ```
 
 ## Completed
@@ -54,15 +54,21 @@ Authentication foundation
 * Standard JSON `401 Unauthorized` and `403 Forbidden` responses integrated with the shared API error contract
 * BCrypt password hashing and method-level authorization enabled
 * Security behavior verified for public access, protected access, role denial, stateless requests, CSRF handling, and password hashing
+* Flyway migration added for tenant-aware users and hashed refresh tokens
+* Database-backed user authentication added with normalized email lookup and BCrypt password verification
+* JWT access-token creation and validation added with issuer, user, role, and business claims
+* Login, refresh-token rotation, logout, revocation, and refresh-token reuse detection implemented
+* Raw refresh tokens excluded from persistence and active token families revoked on detected reuse
+* Authentication persistence, API behavior, JWT authorization, tenant constraints, and token lifecycle verified against MySQL
 
 ## In Progress
 
-* Designing user, role, and refresh-token persistence for JWT authentication
+* Preparing the Angular authentication foundation and login workflow
 
 ## Next Tasks
 
-1. Add the tenant-aware user, role, and refresh-token database model.
-2. Implement login, JWT access-token validation, refresh-token rotation, logout, and revocation.
+1. Build the Angular authentication core, login page, token interceptor, route guard, and authenticated layout.
+2. Add a controlled user onboarding or local development bootstrap workflow.
 3. Add the first secured Business API workflows.
 
 ## Decisions
@@ -95,11 +101,20 @@ Authentication foundation
 * Operational health endpoint: Spring Boot Actuator at `/actuator/health` with component details hidden
 * Authentication plan: JWT access tokens and refresh tokens
 * Security session strategy: Stateless; Spring Security does not create or use server-side authentication sessions
-* Public backend paths: `/error`, `/actuator/health`, `/v3/api-docs/**`, `/swagger-ui.html`, and `/swagger-ui/**`
+* Public backend paths: `/error`, `/actuator/health`, `/v3/api-docs/**`, `/swagger-ui.html`, `/swagger-ui/**`, `/api/v1/auth/login`, `/api/v1/auth/refresh`, and `/api/v1/auth/logout`
 * Authentication mechanisms: Form login, HTTP Basic authentication, and the generated development user are disabled
 * Password hashing: BCrypt through Spring Security's `PasswordEncoder`
 * Authorization: All non-public requests require authentication by default, with method-level authorization enabled
 * Authentication error responses: Shared API error contract with JSON `401` and `403` responses
+* User identity: Email addresses are normalized to lowercase and globally unique for the initial authentication model
+* User tenant scope: Platform administrators have no business identifier; tenant roles require one business identifier
+* Initial user authorization model: Each user has one role from `PLATFORM_ADMIN`, `BUSINESS_OWNER`, `EMPLOYEE`, or `CUSTOMER`
+* JWT signing: HMAC SHA-256 with a required Base64-encoded environment secret containing at least 32 bytes
+* JWT defaults: Issuer `https://api.schedio.local`, 15-minute access tokens, and 30-day refresh tokens
+* JWT identity claims: User identifier in `sub`, plus email, roles, and business identifier where applicable
+* Refresh-token storage: Only SHA-256 token hashes are persisted
+* Refresh-token lifecycle: One-time rotation with pessimistic locking and token-family revocation on reuse
+* Logout behavior: The refresh-token family is revoked; already issued access tokens remain valid until expiration
 * Database migration tool: Flyway
 * Hibernate schema strategy: Validate only
 * Database integration testing: Testcontainers 2.0.5 with ephemeral MySQL containers
@@ -130,7 +145,7 @@ They must not block the initial project foundation.
 
 ## Known Issues
 
-* None yet
+* Fresh databases contain no login-capable user because onboarding and development bootstrap workflows have not been implemented yet
 
 ## Change Log
 
@@ -178,3 +193,7 @@ They must not block the initial project foundation.
 * Added the stateless Spring Security foundation with protected-by-default application routes.
 * Added standard JSON authentication and access-denied responses, BCrypt hashing, and method authorization.
 * Added focused security tests covering the initial authentication and authorization boundary.
+* Added the tenant-aware user and refresh-token persistence model with database constraints.
+* Implemented database authentication, signed JWT access tokens, refresh-token rotation, logout, and reuse-triggered family revocation.
+* Added MySQL integration coverage for persistence, tenant constraints, login, JWT authorization, refresh rotation, logout, and safe authentication errors.
+* Documented authentication configuration, endpoint usage, and token lifecycle behavior.
