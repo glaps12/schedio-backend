@@ -6,9 +6,15 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,13 +26,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = SecurityTestController.class)
 @Import({
 	SecurityConfig.class,
 	RestAuthenticationEntryPoint.class,
 	RestAccessDeniedHandler.class,
 	GlobalExceptionHandler.class,
-	SecurityTestController.class
+	SecurityTestController.class,
+	SecurityConfigTest.TestSecurityBeans.class
 })
 class SecurityConfigTest {
 
@@ -100,5 +107,24 @@ class SecurityConfigTest {
 		assertThat(passwordHash).isNotEqualTo(rawPassword);
 		assertThat(passwordHash).startsWith("$2");
 		assertThat(passwordEncoder.matches(rawPassword, passwordHash)).isTrue();
+	}
+
+	@TestConfiguration(proxyBeanMethods = false)
+	static class TestSecurityBeans {
+
+		@Bean
+		UserDetailsService testUserDetailsService() {
+			return username -> User.withUsername(username)
+				.password("unused")
+				.roles("BUSINESS_OWNER")
+				.build();
+		}
+
+		@Bean
+		JwtDecoder testJwtDecoder() {
+			return token -> {
+				throw new JwtException("JWT decoding is not used by this MVC slice.");
+			};
+		}
 	}
 }

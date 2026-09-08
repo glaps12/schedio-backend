@@ -86,6 +86,14 @@ public class GlobalExceptionHandler {
 		return createResponse(HttpStatus.FORBIDDEN, "Access is denied.", request, List.of());
 	}
 
+	@ExceptionHandler(UnauthorizedException.class)
+	ResponseEntity<ApiErrorResponse> handleUnauthorized(
+		UnauthorizedException exception,
+		HttpServletRequest request
+	) {
+		return createResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), request, List.of());
+	}
+
 	@ExceptionHandler(Exception.class)
 	ResponseEntity<ApiErrorResponse> handleUnexpectedException(
 		Exception exception,
